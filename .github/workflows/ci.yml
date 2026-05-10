@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pytest pytest-cov
+          pip install -e .
+      - name: Lint with ruff
+        run: |
+          pip install ruff
+          ruff check tensorvault/
+      - name: Type check with mypy
+        run: |
+          pip install mypy
+          mypy tensorvault/ --ignore-missing-imports
+      - name: Test with pytest
+        run: |
+          pytest tests/ --cov=tensorvault --cov-report=xml -v
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify README examples run
+        run: |
+          pip install numpy
+          pip install -e .
+          python -c "from tensorvault import Tensor; t = Tensor([1,2,3]); print(t)"
