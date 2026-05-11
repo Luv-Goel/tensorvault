@@ -246,4 +246,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions welcome — bug fixes,
 
 ## License
 
-MIT © [Diablo](https://github.com/Luv-Goel)
+MIT © [Luv](https://github.com/Luv-Goel)
