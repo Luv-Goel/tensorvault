@@ -109,6 +109,17 @@ print(f"dz/dx = {x.grad}")  # [0.5, 0.5, 0.5]
 print(f"dz/dw = {w.grad}")  # [1.0, 2.0, 3.0]
 ```
 
+### Saving and Loading Models
+
+```python
+# Save model to disk
+model.save("my_model.pkl")
+
+# Load model from disk
+new_model = nn.Sequential()
+new_model.load("my_model.pkl")
+```
+
 ---
 
 ## Architecture

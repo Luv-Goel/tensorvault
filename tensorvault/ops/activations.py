@@ -145,3 +145,24 @@ class LogSoftmax(_Function):
         s = xp.exp(ls.data)
         grad = grad_output.data - s * xp.sum(grad_output.data, axis=axis, keepdims=True)
         return Tensor(grad, device=ls.device)
+
+def relu(x: Tensor) -> Tensor:
+    return ReLU.apply(x)
+
+def leaky_relu(x: Tensor, negative_slope: float = 0.01) -> Tensor:
+    return LeakyReLU.apply(x, negative_slope)
+
+def sigmoid(x: Tensor) -> Tensor:
+    return Sigmoid.apply(x)
+
+def tanh(x: Tensor) -> Tensor:
+    return Tanh.apply(x)
+
+def gelu(x: Tensor) -> Tensor:
+    return GELU.apply(x)
+
+def softmax(x: Tensor, axis: int = -1) -> Tensor:
+    return Softmax.apply(x, axis)
+
+def log_softmax(x: Tensor, axis: int = -1) -> Tensor:
+    return LogSoftmax.apply(x, axis)

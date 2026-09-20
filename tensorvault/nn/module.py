@@ -39,12 +39,13 @@ class Module:
         object.__setattr__(self, name, value)
 
     def __getattr__(self, name: str):
-        if name in self._parameters:
-            return self._parameters[name]
-        if name in self._modules:
-            return self._modules[name]
-        if name in self._buffers:
-            return self._buffers[name]
+        if '_parameters' in self.__dict__:
+            if name in self._parameters:
+                return self._parameters[name]
+            if name in self._modules:
+                return self._modules[name]
+            if name in self._buffers:
+                return self._buffers[name]
         raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}'")
 
     def register_parameter(self, name: str, param: Optional[Parameter]):
@@ -137,3 +138,14 @@ class Module:
 
     def extra_repr(self) -> str:
         return ''
+
+    def save(self, path: str):
+        import pickle
+        with open(path, 'wb') as f:
+            pickle.dump(self, f)
+
+    def load(self, path: str):
+        import pickle
+        with open(path, 'rb') as f:
+            obj = pickle.load(f)
+        self.__dict__.update(obj.__dict__)

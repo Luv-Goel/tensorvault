@@ -68,6 +68,11 @@ class _Context:
 
 class _Function:
     """Base class for differentiable operations."""
+    @classmethod
+    def apply(cls, *args, **kwargs):
+        ctx = _Context()
+        return cls.forward(ctx, *args, **kwargs)
+
     @staticmethod
     def forward(ctx: _Context, *inputs: Any) -> Any:
         raise NotImplementedError
@@ -310,8 +315,9 @@ class Tensor:
             return
 
         if gradient is None:
-            if self.shape == ():
-                gradient = Tensor(1.0, device=self.device)
+            if self.size == 1:
+                xp = cp if self._device == 'cuda' and _gpu_available else np
+                gradient = Tensor(xp.ones(self.shape, dtype=xp.float32), device=self.device)
             else:
                 raise RuntimeError(
                     "backward() can only be called on scalar tensors "

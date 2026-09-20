@@ -11,4 +11,3 @@ from . import ops
 from . import nn
 from . import optim
 from . import data
-from . import utils
